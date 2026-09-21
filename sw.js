@@ -1,5 +1,5 @@
 // Cache simples: serve o app offline e atualiza em segundo plano.
-const CACHE = 'treino-v1';
+const CACHE = 'treino-v2';
 const ASSETS = [
   './',
   './index.html',
