@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<meta name="description" content="Tracker de treino: 4 dias, séries, repetições e progressão por faixa.">
+<title>Treino</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="icon-btn" id="backBtn" hidden aria-label="Voltar">&#8592;</button>
+  <h1 id="title">Treino</h1>
+  <button class="icon-btn" id="menuBtn" aria-label="Menu">&#9881;</button>
+</header>
+
+<main id="view"></main>
+
+<nav class="tabbar" id="tabbar">
+  <button data-tab="home" class="active"><span>&#9673;</span>Treinar</button>
+  <button data-tab="history"><span>&#9776;</span>Histórico</button>
+  <button data-tab="progress"><span>&#9650;</span>Progresso</button>
+</nav>
+
+<div class="rest-bar" id="restBar" hidden>
+  <span class="rest-time" id="restTime">02:00</span>
+  <div class="rest-actions">
+    <button id="restMinus">-30s</button>
+    <button id="restPlus">+30s</button>
+    <button id="restStop" class="danger">Parar</button>
+  </div>
+</div>
+
+<dialog id="sheet">
+  <h2>Ajustes</h2>
+  <button class="row-btn" id="exportBtn">Exportar backup (.json)</button>
+  <button class="row-btn" id="importBtn">Importar backup</button>
+  <input type="file" id="importFile" accept="application/json" hidden>
+  <button class="row-btn danger" id="wipeBtn">Apagar todos os dados</button>
+  <p class="muted small">Os dados ficam salvos só neste aparelho (localStorage). Faça backup de vez em quando.</p>
+  <button class="row-btn ghost" id="closeSheet">Fechar</button>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
