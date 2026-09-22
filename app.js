@@ -217,7 +217,7 @@ function viewSession() {
       '<div class="meta">' + e.s + ' séries · ' + e.lo + '–' + e.hi + ' reps' +
       (prev ? ' · anterior: ' + prev.map(p => fmtW(p.w) + '×' + (p.r === null ? '—' : p.r)).join(', ') : '') +
       '</div></div>' +
-      '<table><thead><tr><th>Sér.</th><th>Peso (kg)</th><th>Reps</th><th>✓</th><th></th></tr></thead><tbody>';
+      '<table><thead><tr><th>Sér.</th><th>Peso (kg)</th><th>Reps</th><th>✓</th></tr></thead><tbody>';
 
     rows.forEach((r, si) => {
       const p = prev && prev[si];
@@ -232,7 +232,6 @@ function viewSession() {
           (hitTop ? ' style="border-color:var(--accent)"' : '') + '>' +
           (p ? '<span class="prev">' + (p.r === null ? '—' : p.r) + ' reps</span>' : '') + '</td>' +
         '<td><button class="chk ' + (r.done ? 'on' : '') + '" data-chk="' + i + ':' + si + '" aria-label="Concluir série">✓</button></td>' +
-        '<td class="timer-cell"><button data-timer="1" aria-label="Iniciar descanso">⏱</button></td>' +
         '</tr>';
     });
 
@@ -258,7 +257,6 @@ function finishSession() {
   });
   saveLogs();
   active = null; saveActive();
-  stopRest();
   tab = 'history';
   go({ name: 'home' });
 }
@@ -378,47 +376,6 @@ function viewExercise(name) {
   return h;
 }
 
-/* ---------- timer de descanso ---------- */
-let restId = null, restLeft = 0;
-
-function paintRest() {
-  $('#restTime').textContent =
-    String(Math.floor(restLeft / 60)).padStart(2, '0') + ':' + String(restLeft % 60).padStart(2, '0');
-}
-
-function startRest(sec) {
-  restLeft = sec;
-  $('#restBar').hidden = false;
-  paintRest();
-  clearInterval(restId);
-  restId = setInterval(() => {
-    restLeft--;
-    paintRest();
-    if (restLeft <= 0) { stopRest(); beep(); }
-  }, 1000);
-}
-
-function stopRest() {
-  clearInterval(restId);
-  restId = null;
-  $('#restBar').hidden = true;
-}
-
-function beep() {
-  try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {}
-  try {
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    const ctx = new Ctx();
-    const o = ctx.createOscillator(), g = ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.type = 'sine'; o.frequency.value = 880;
-    g.gain.setValueAtTime(0.001, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-    o.start(); o.stop(ctx.currentTime + 0.65);
-  } catch (e) {}
-}
-
 /* ---------- eventos ---------- */
 $('#view').addEventListener('input', e => {
   const t = e.target;
@@ -445,13 +402,11 @@ document.addEventListener('click', e => {
       const prev = lastSets(active.day, i);
       if (set.w === null && prev && prev[si]) set.w = prev[si].w;
       if (set.r === null) set.r = dayById(active.day).ex[i].lo;
-      startRest(120);
     }
     saveActive();
     render();
     return;
   }
-  if (e.target.closest('[data-timer]')) { startRest(120); return; }
   if (e.target.id === 'finishBtn') { finishSession(); return; }
   if (e.target.id === 'discardBtn') {
     if (confirm('Descartar este treino? Nada será salvo.')) {
@@ -479,9 +434,6 @@ document.querySelectorAll('.tabbar button').forEach(b => b.addEventListener('cli
 }));
 
 $('#backBtn').addEventListener('click', () => go({ name: 'home' }));
-$('#restMinus').addEventListener('click', () => { restLeft = Math.max(5, restLeft - 30); paintRest(); });
-$('#restPlus').addEventListener('click', () => { restLeft += 30; paintRest(); });
-$('#restStop').addEventListener('click', stopRest);
 
 /* ---------- ajustes / backup ---------- */
 const sheet = $('#sheet');

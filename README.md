@@ -10,8 +10,7 @@ Sem conta, sem servidor: os dados ficam salvos no próprio aparelho.
 
 - **Registrar o treino série a série** — peso e reps de cada série, com o valor da sessão
   anterior sempre visível como referência.
-- **Marcar a série como feita** (✓), que já dispara um **timer de descanso** de 2 min
-  (ajustável em ±30s, com vibração e bip no fim).
+- **Marcar a série como feita** (✓) para acompanhar quanto já saiu do treino.
 - **Progressão automática por faixa** — quando você bate o topo da faixa em *todas* as
   séries de um exercício, o app marca `↑ subir carga` na próxima vez que abrir aquele dia.
 - **Próximo treino sugerido** — rotaciona Dia 1 → 2 → 3 → 4 a partir do último registrado.
